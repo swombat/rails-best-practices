@@ -1,0 +1,1147 @@
+{
+  "version": 1,
+  "title": "Rails Best Practices Catalog",
+  "source_lookup": {
+    "docs_root_note": "All doc_path values are relative to the skill directory that contains this catalog.",
+    "optional_source_repos": {
+      "campfire": {
+        "preferred_local_path": "~/dev/once-campfire",
+        "search_paths": [
+          "app",
+          "config",
+          "db",
+          "test"
+        ],
+        "notes": "Use only for targeted implementation examples after the user selects a practice."
+      },
+      "fizzy": {
+        "preferred_local_path": "~/dev/fizzy",
+        "search_paths": [
+          "app",
+          "config",
+          "db",
+          "test"
+        ],
+        "notes": "Use only for targeted implementation examples after the user selects a practice."
+      }
+    }
+  },
+  "import_modes": {
+    "docs_only": "Copy or adapt the selected reference docs into the target Rails repo without broad architecture rewrites.",
+    "starter_scaffold": "Set up a new or mostly-empty Rails app around the chosen practices with small starter files and structure.",
+    "guided_patch": "Patch an existing Rails app carefully after inspecting the current code, dependencies, routes, and test shape."
+  },
+  "selection_axes": [
+    {
+      "id": "tenancy",
+      "question": "Is the application single-account or multi-tenant?",
+      "why_it_matters": "This decides the core auth and tenant model, and it is the one branch that should not be merged casually.",
+      "choices": [
+        {
+          "id": "single_account",
+          "label": "Single-account or once-per-customer",
+          "recommended_bundle": "campfire-collaboration",
+          "recommended_practice_ids": [
+            "campfire:authentication-and-current",
+            "campfire:single-account-bootstrap"
+          ]
+        },
+        {
+          "id": "multi_tenant",
+          "label": "Multi-tenant SaaS",
+          "recommended_bundle": "fizzy-saas",
+          "recommended_practice_ids": [
+            "fizzy:authentication-spec",
+            "fizzy:multi-tenant-authentication"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "response_surface",
+      "question": "Will the app serve mostly HTML, or HTML plus Turbo Streams and JSON endpoints from the same resources?",
+      "why_it_matters": "This decides whether the base controller guidance is enough or whether hybrid resource controllers should be part of the initial shape.",
+      "choices": [
+        {
+          "id": "html_first",
+          "label": "Mostly HTML resources",
+          "recommended_practice_ids": [
+            "campfire:resourceful-controller-design",
+            "fizzy:restful-resource-design"
+          ]
+        },
+        {
+          "id": "html_turbo_json",
+          "label": "HTML plus Turbo and JSON",
+          "recommended_practice_ids": [
+            "fizzy:hybrid-resource-controllers",
+            "fizzy:turbo-patterns"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "collaboration",
+      "question": "Does the app need presence, unread state, or live multi-user collaboration?",
+      "why_it_matters": "Campfire's collaboration documents are strongest when the app behaves like a shared workspace instead of a classic CRUD app.",
+      "choices": [
+        {
+          "id": "standard_crud",
+          "label": "No heavy live collaboration",
+          "recommended_practice_ids": [
+            "fizzy:turbo-patterns"
+          ]
+        },
+        {
+          "id": "live_collaboration",
+          "label": "Live collaboration and per-user state",
+          "recommended_practice_ids": [
+            "campfire:memberships-and-room-architecture",
+            "campfire:realtime-with-hotwire-and-action-cable"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "frontend",
+      "question": "Will the project use deliberate server-rendered UI with custom CSS, or does it already have a separate design system or Tailwind stack?",
+      "why_it_matters": "Both source projects lean on ERB, helpers, Stimulus, and custom CSS; that philosophy transfers well, but CSS architecture should not be copied blindly into a repo that already standardized on another stack.",
+      "choices": [
+        {
+          "id": "custom_css",
+          "label": "Server-rendered UI with custom CSS",
+          "recommended_bundle": "hotwire-ui",
+          "recommended_practice_ids": [
+            "campfire:view-layer-and-css",
+            "fizzy:modern-css-architecture",
+            "fizzy:form-components"
+          ]
+        },
+        {
+          "id": "existing_design_system",
+          "label": "Existing Tailwind or component system",
+          "recommended_practice_ids": [
+            "campfire:view-layer-and-css",
+            "fizzy:view-layer-philosophy"
+          ]
+        }
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "id": "mixed-foundation",
+      "label": "Mixed Rails Foundation",
+      "summary": "A portable base for a fresh Rails app: domain-first models, small controllers, disciplined views, and integration-heavy tests.",
+      "recommended_for": [
+        "new Rails apps that need a strong default architecture",
+        "teams that want a shared baseline before adding tenancy or realtime"
+      ],
+      "practice_ids": [
+        "fizzy:domain-driven-design",
+        "campfire:resourceful-controller-design",
+        "fizzy:concerns-for-organization",
+        "campfire:view-layer-and-css",
+        "campfire:testing-philosophy"
+      ]
+    },
+    {
+      "id": "campfire-collaboration",
+      "label": "Campfire Collaboration Stack",
+      "summary": "Single-account, collaboration-heavy Rails with memberships, realtime updates, rich content, and classic Rails primitives.",
+      "recommended_for": [
+        "once-per-customer installations",
+        "shared inbox, chat, CRM, support, or workspace products"
+      ],
+      "practice_ids": [
+        "campfire:authentication-and-current",
+        "campfire:single-account-bootstrap",
+        "campfire:resourceful-controller-design",
+        "campfire:memberships-and-room-architecture",
+        "campfire:realtime-with-hotwire-and-action-cable",
+        "campfire:rich-content-and-attachments",
+        "campfire:background-jobs-and-integrations",
+        "campfire:view-layer-and-css",
+        "campfire:testing-philosophy"
+      ]
+    },
+    {
+      "id": "fizzy-saas",
+      "label": "Fizzy SaaS Stack",
+      "summary": "Multi-tenant Rails with passwordless auth, tenant-aware authorization, hybrid controllers, operational patterns, and Rails-first UI.",
+      "recommended_for": [
+        "greenfield SaaS products",
+        "multi-account apps that need structured auth and portability"
+      ],
+      "practice_ids": [
+        "fizzy:authentication-spec",
+        "fizzy:multi-tenant-authentication",
+        "fizzy:restful-resource-design",
+        "fizzy:hybrid-resource-controllers",
+        "fizzy:domain-driven-design",
+        "fizzy:active-storage-authorization",
+        "fizzy:event-sourcing-and-activity",
+        "fizzy:platform-aware-rails",
+        "fizzy:testing-philosophy"
+      ]
+    },
+    {
+      "id": "hotwire-ui",
+      "label": "Hotwire UI Layer",
+      "summary": "Server-rendered UI patterns for teams that want strong partials, custom CSS, form components, and pragmatic Turbo usage.",
+      "recommended_for": [
+        "HTML-first Rails apps",
+        "teams standardizing on ERB, Stimulus, and custom CSS"
+      ],
+      "practice_ids": [
+        "campfire:view-layer-and-css",
+        "fizzy:view-layer-philosophy",
+        "fizzy:modern-css-architecture",
+        "fizzy:form-components",
+        "fizzy:turbo-patterns"
+      ]
+    },
+    {
+      "id": "operations-and-portability",
+      "label": "Operations and Portability",
+      "summary": "Operational patterns for background work, events, exports, platform awareness, and production-oriented Rails concerns.",
+      "recommended_for": [
+        "apps integrating with external systems",
+        "teams that need exports, notifications, or platform-sensitive behavior"
+      ],
+      "practice_ids": [
+        "campfire:background-jobs-and-integrations",
+        "fizzy:event-sourcing-and-activity",
+        "fizzy:advanced-rails-patterns",
+        "fizzy:account-data-transfer",
+        "fizzy:platform-aware-rails"
+      ]
+    }
+  ],
+  "families": [
+    {
+      "id": "auth-and-tenancy",
+      "label": "Auth and Tenancy",
+      "selection_mode": "choose_one_core_track",
+      "guidance": "Choose exactly one core tenancy track. Campfire is intentionally single-account and session-centric. Fizzy is intentionally multi-tenant and tenant-aware. Do not import both bootstraps into the same app.",
+      "practice_ids": [
+        "campfire:authentication-and-current",
+        "campfire:single-account-bootstrap",
+        "fizzy:authentication-spec",
+        "fizzy:multi-tenant-authentication"
+      ],
+      "overlaps": [
+        {
+          "relation": "variant",
+          "practice_ids": [
+            "campfire:authentication-and-current",
+            "fizzy:authentication-spec"
+          ],
+          "guidance": "Both define the core auth stack. Campfire assumes cookie-backed sessions for a single-account app. Fizzy assumes passwordless auth in a multi-tenant system."
+        },
+        {
+          "relation": "variant",
+          "practice_ids": [
+            "campfire:single-account-bootstrap",
+            "fizzy:multi-tenant-authentication"
+          ],
+          "guidance": "These are mutually exclusive starting points. Choose Campfire for single-account installs and Fizzy for account membership systems."
+        },
+        {
+          "relation": "complement",
+          "practice_ids": [
+            "fizzy:authentication-spec",
+            "fizzy:multi-tenant-authentication"
+          ],
+          "guidance": "These two Fizzy docs are meant to travel together."
+        }
+      ]
+    },
+    {
+      "id": "controllers-and-routes",
+      "label": "Controllers and Routes",
+      "selection_mode": "choose_one_base_plus_optional_extensions",
+      "guidance": "Pick one base resource-controller philosophy, then layer in hybrid responses only if the app truly serves HTML, Turbo Streams, and JSON from the same resources.",
+      "practice_ids": [
+        "campfire:resourceful-controller-design",
+        "fizzy:restful-resource-design",
+        "fizzy:hybrid-resource-controllers"
+      ],
+      "overlaps": [
+        {
+          "relation": "equivalent",
+          "practice_ids": [
+            "campfire:resourceful-controller-design",
+            "fizzy:restful-resource-design"
+          ],
+          "guidance": "These are strongly aligned. Choose one canonical controller doc to avoid duplicate doctrine."
+        },
+        {
+          "relation": "complement",
+          "practice_ids": [
+            "fizzy:hybrid-resource-controllers",
+            "campfire:resourceful-controller-design"
+          ],
+          "guidance": "Hybrid controllers are an extension of the base resourceful pattern, not a replacement for it."
+        }
+      ]
+    },
+    {
+      "id": "models-and-domain",
+      "label": "Models and Domain",
+      "selection_mode": "mix_and_match",
+      "guidance": "These documents mostly compose well. Use domain-driven design and concerns as the foundation, then add state, callbacks, or delegated types where the domain calls for them.",
+      "practice_ids": [
+        "campfire:model-organization-with-concerns",
+        "fizzy:concerns-for-organization",
+        "fizzy:domain-driven-design",
+        "fizzy:state-modeling-with-records",
+        "fizzy:callbacks-done-right",
+        "fizzy:delegated-types-pattern"
+      ],
+      "overlaps": [
+        {
+          "relation": "equivalent",
+          "practice_ids": [
+            "campfire:model-organization-with-concerns",
+            "fizzy:concerns-for-organization"
+          ],
+          "guidance": "These are the same organizational instinct from two codebases. Pick one as the main concern doctrine."
+        }
+      ]
+    },
+    {
+      "id": "views-css-and-forms",
+      "label": "Views, CSS, and Forms",
+      "selection_mode": "choose_one_base_view_doc_plus_optional_layers",
+      "guidance": "Choose one base view philosophy doc, then add CSS architecture and form components if the target app wants a custom server-rendered UI system.",
+      "practice_ids": [
+        "campfire:view-layer-and-css",
+        "fizzy:view-layer-philosophy",
+        "fizzy:modern-css-architecture",
+        "fizzy:form-components"
+      ],
+      "overlaps": [
+        {
+          "relation": "equivalent",
+          "practice_ids": [
+            "campfire:view-layer-and-css",
+            "fizzy:view-layer-philosophy"
+          ],
+          "guidance": "Both push toward partials, helpers, Stimulus, and restraint. Use one as the base doctrine and draw examples from the other if needed."
+        },
+        {
+          "relation": "complement",
+          "practice_ids": [
+            "fizzy:modern-css-architecture",
+            "fizzy:form-components"
+          ],
+          "guidance": "Form components sit naturally on top of the CSS architecture."
+        }
+      ]
+    },
+    {
+      "id": "realtime-and-collaboration",
+      "label": "Realtime and Collaboration",
+      "selection_mode": "choose_depth_of_realtime",
+      "guidance": "Choose Campfire when the app needs collaboration objects, membership boundaries, presence, or unread state. Choose Fizzy when the app mostly needs reusable Turbo patterns without the full collaboration domain.",
+      "practice_ids": [
+        "campfire:memberships-and-room-architecture",
+        "campfire:realtime-with-hotwire-and-action-cable",
+        "fizzy:turbo-patterns"
+      ],
+      "overlaps": [
+        {
+          "relation": "variant_or_complement",
+          "practice_ids": [
+            "campfire:realtime-with-hotwire-and-action-cable",
+            "fizzy:turbo-patterns"
+          ],
+          "guidance": "Campfire is the stronger collaboration-system reference. Fizzy is the stronger generic Turbo pattern catalog. They can complement each other, but Campfire should anchor live collaboration apps."
+        },
+        {
+          "relation": "complement",
+          "practice_ids": [
+            "campfire:memberships-and-room-architecture",
+            "campfire:realtime-with-hotwire-and-action-cable"
+          ],
+          "guidance": "These two Campfire docs usually travel together."
+        }
+      ]
+    },
+    {
+      "id": "content-storage-and-profiles",
+      "label": "Content, Storage, and Profiles",
+      "selection_mode": "mix_and_match",
+      "guidance": "These practices generally compose well. Rich content, attachment authorization, and profile handling solve adjacent concerns and can be imported together.",
+      "practice_ids": [
+        "campfire:rich-content-and-attachments",
+        "fizzy:active-storage-authorization",
+        "fizzy:user-profiles-and-avatars"
+      ]
+    },
+    {
+      "id": "jobs-events-and-integrations",
+      "label": "Jobs, Events, and Integrations",
+      "selection_mode": "mix_and_match",
+      "guidance": "Campfire's job discipline and Fizzy's event and advanced operational patterns complement each other well.",
+      "practice_ids": [
+        "campfire:background-jobs-and-integrations",
+        "fizzy:event-sourcing-and-activity",
+        "fizzy:advanced-rails-patterns"
+      ]
+    },
+    {
+      "id": "testing",
+      "label": "Testing",
+      "selection_mode": "choose_one_canonical_doc",
+      "guidance": "Both testing docs are closely aligned. Pick one as the canonical testing reference and only pull the second if you need concrete examples from both codebases.",
+      "practice_ids": [
+        "campfire:testing-philosophy",
+        "fizzy:testing-philosophy"
+      ],
+      "overlaps": [
+        {
+          "relation": "equivalent",
+          "practice_ids": [
+            "campfire:testing-philosophy",
+            "fizzy:testing-philosophy"
+          ],
+          "guidance": "The testing philosophy is nearly identical across both projects."
+        }
+      ]
+    },
+    {
+      "id": "portability-and-platform",
+      "label": "Portability and Platform",
+      "selection_mode": "optional_add_ons",
+      "guidance": "These Fizzy practices are specialized operational add-ons. Pull them only if the target app needs exports, imports, platform detection, or request-context features.",
+      "practice_ids": [
+        "fizzy:account-data-transfer",
+        "fizzy:platform-aware-rails"
+      ]
+    }
+  ],
+  "practices": {
+    "campfire:authentication-and-current": {
+      "title": "Authentication and Current Context",
+      "source": "campfire",
+      "slug": "authentication-and-current",
+      "family_id": "auth-and-tenancy",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/authentication-and-current.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Cookie-backed sessions, narrow Current usage, and signed-link patterns for single-account apps.",
+      "best_for": [
+        "single-account applications",
+        "request-scoped authentication context",
+        "session-centric Rails auth"
+      ],
+      "conflicts_with": [
+        "fizzy:authentication-spec",
+        "fizzy:multi-tenant-authentication"
+      ],
+      "complements": [
+        "campfire:single-account-bootstrap",
+        "campfire:testing-philosophy"
+      ]
+    },
+    "campfire:background-jobs-and-integrations": {
+      "title": "Background Jobs and Integrations",
+      "source": "campfire",
+      "slug": "background-jobs-and-integrations",
+      "family_id": "jobs-events-and-integrations",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/background-jobs-and-integrations.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "Thin jobs, explicit integration boundaries, and clear failure behavior.",
+      "best_for": [
+        "webhooks",
+        "notifications",
+        "third-party APIs"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:event-sourcing-and-activity",
+        "fizzy:advanced-rails-patterns"
+      ]
+    },
+    "campfire:memberships-and-room-architecture": {
+      "title": "Memberships and Room Architecture",
+      "source": "campfire",
+      "slug": "memberships-and-room-architecture",
+      "family_id": "realtime-and-collaboration",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/memberships-and-room-architecture.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Collaboration architecture built around first-class membership records and per-user state.",
+      "best_for": [
+        "chat and inbox products",
+        "per-user unread state",
+        "collaboration boundaries"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:realtime-with-hotwire-and-action-cable",
+        "campfire:rich-content-and-attachments"
+      ]
+    },
+    "campfire:model-organization-with-concerns": {
+      "title": "Model Organization with Concerns",
+      "source": "campfire",
+      "slug": "model-organization-with-concerns",
+      "family_id": "models-and-domain",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/model-organization-with-concerns.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "Trait-based concerns and small collaborators for large Active Record models.",
+      "best_for": [
+        "growing models",
+        "shared traits",
+        "avoiding service-object sprawl"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:domain-driven-design",
+        "fizzy:state-modeling-with-records"
+      ]
+    },
+    "campfire:realtime-with-hotwire-and-action-cable": {
+      "title": "Realtime with Hotwire and Action Cable",
+      "source": "campfire",
+      "slug": "realtime-with-hotwire-and-action-cable",
+      "family_id": "realtime-and-collaboration",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/realtime-with-hotwire-and-action-cable.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Live collaboration patterns that separate persisted HTML updates from ephemeral signals.",
+      "best_for": [
+        "presence",
+        "unread state",
+        "collaboration-heavy interfaces"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:memberships-and-room-architecture",
+        "fizzy:turbo-patterns"
+      ]
+    },
+    "campfire:resourceful-controller-design": {
+      "title": "Resourceful Controller Design",
+      "source": "campfire",
+      "slug": "resourceful-controller-design",
+      "family_id": "controllers-and-routes",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/resourceful-controller-design.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Small controllers and noun-based routes built around resources instead of ad hoc verbs.",
+      "best_for": [
+        "HTML-first applications",
+        "clean controller boundaries",
+        "new app scaffolding"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:hybrid-resource-controllers",
+        "campfire:testing-philosophy"
+      ]
+    },
+    "campfire:rich-content-and-attachments": {
+      "title": "Rich Content and Attachments",
+      "source": "campfire",
+      "slug": "rich-content-and-attachments",
+      "family_id": "content-storage-and-profiles",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/rich-content-and-attachments.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Canonical rich-body modeling, attachment safety, and projection-friendly content handling.",
+      "best_for": [
+        "Action Text",
+        "attachments",
+        "user-authored content"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:active-storage-authorization",
+        "campfire:background-jobs-and-integrations"
+      ]
+    },
+    "campfire:single-account-bootstrap": {
+      "title": "Single-Account Bootstrap",
+      "source": "campfire",
+      "slug": "single-account-bootstrap",
+      "family_id": "auth-and-tenancy",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/single-account-bootstrap.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold"
+      ],
+      "summary": "Explicit bootstrap flow for apps that are installed once per customer or run as one shared account.",
+      "best_for": [
+        "once-per-customer installs",
+        "single-tenant products",
+        "greenfield app setup"
+      ],
+      "conflicts_with": [
+        "fizzy:multi-tenant-authentication"
+      ],
+      "complements": [
+        "campfire:authentication-and-current"
+      ]
+    },
+    "campfire:testing-philosophy": {
+      "title": "Testing Philosophy",
+      "source": "campfire",
+      "slug": "testing-philosophy",
+      "family_id": "testing",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/testing-philosophy.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "Integration-heavy Rails testing with focused browser coverage and real-stack confidence.",
+      "best_for": [
+        "Minitest suites",
+        "request and integration tests",
+        "greenfield testing doctrine"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:testing-philosophy"
+      ]
+    },
+    "campfire:view-layer-and-css": {
+      "title": "View Layer and CSS",
+      "source": "campfire",
+      "slug": "view-layer-and-css",
+      "family_id": "views-css-and-forms",
+      "doc_path": "references/bundled-docs/campfire-best-practices/best-practices/view-layer-and-css.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Partials, helpers, Stimulus wiring, and custom CSS as the main server-rendered UI stack.",
+      "best_for": [
+        "ERB-first applications",
+        "custom CSS",
+        "Stimulus-enhanced UI"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:modern-css-architecture",
+        "fizzy:form-components"
+      ]
+    },
+    "fizzy:account-data-transfer": {
+      "title": "Structured Account Data Transfer",
+      "source": "fizzy",
+      "slug": "account-data-transfer",
+      "family_id": "portability-and-platform",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/account-data-transfer.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Ordered export and import of account data using record groups and manifests.",
+      "best_for": [
+        "account migrations",
+        "exports",
+        "customer portability"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:platform-aware-rails",
+        "fizzy:advanced-rails-patterns"
+      ]
+    },
+    "fizzy:active-storage-authorization": {
+      "title": "Active Storage Authorization",
+      "source": "fizzy",
+      "slug": "active-storage-authorization",
+      "family_id": "content-storage-and-profiles",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/active-storage-authorization.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Authorize files through the records that own them instead of ad hoc blob whitelists.",
+      "best_for": [
+        "private attachments",
+        "variants",
+        "record-owned authorization"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:rich-content-and-attachments",
+        "fizzy:user-profiles-and-avatars"
+      ]
+    },
+    "fizzy:advanced-rails-patterns": {
+      "title": "Advanced Rails Patterns",
+      "source": "fizzy",
+      "slug": "advanced-rails-patterns",
+      "family_id": "jobs-events-and-integrations",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/advanced-rails-patterns.md",
+      "kind": "mixed_reference",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "Production-grade patterns for jobs, storage, search, notifications, webhooks, and related operational concerns.",
+      "best_for": [
+        "mature applications",
+        "production hardening",
+        "operational Rails features"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:background-jobs-and-integrations",
+        "fizzy:event-sourcing-and-activity"
+      ]
+    },
+    "fizzy:authentication-spec": {
+      "title": "Passwordless Authentication Architecture",
+      "source": "fizzy",
+      "slug": "authentication-spec",
+      "family_id": "auth-and-tenancy",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/authentication-spec.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Passwordless auth architecture with sessions, tokens, and tenant-aware authorization boundaries.",
+      "best_for": [
+        "multi-tenant SaaS",
+        "magic links or passkeys",
+        "session and token auth"
+      ],
+      "conflicts_with": [
+        "campfire:authentication-and-current"
+      ],
+      "complements": [
+        "fizzy:multi-tenant-authentication",
+        "fizzy:testing-philosophy"
+      ]
+    },
+    "fizzy:callbacks-done-right": {
+      "title": "Callbacks Done Right",
+      "source": "fizzy",
+      "slug": "callbacks-done-right",
+      "family_id": "models-and-domain",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/callbacks-done-right.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "A pragmatic callback discipline: use them when they fit the lifecycle, not as hidden service layers.",
+      "best_for": [
+        "lifecycle-driven model logic",
+        "active record events",
+        "cleanup of callback-heavy code"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:domain-driven-design",
+        "fizzy:event-sourcing-and-activity"
+      ]
+    },
+    "fizzy:concerns-for-organization": {
+      "title": "Using Rails Concerns for Organization",
+      "source": "fizzy",
+      "slug": "concerns-for-organization",
+      "family_id": "models-and-domain",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/concerns-for-organization.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "Use concerns as real traits and organizational units instead of dumping behavior into services.",
+      "best_for": [
+        "large models",
+        "trait extraction",
+        "organization without indirection"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:domain-driven-design",
+        "campfire:model-organization-with-concerns"
+      ]
+    },
+    "fizzy:delegated-types-pattern": {
+      "title": "The Delegated Types Pattern",
+      "source": "fizzy",
+      "slug": "delegated-types-pattern",
+      "family_id": "models-and-domain",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/delegated-types-pattern.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Use delegated types when several content variants share operational behavior but need distinct internals.",
+      "best_for": [
+        "polymorphic content systems",
+        "shared feeds",
+        "content-oriented domains"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:domain-driven-design",
+        "fizzy:state-modeling-with-records"
+      ]
+    },
+    "fizzy:domain-driven-design": {
+      "title": "Domain-Driven Design",
+      "source": "fizzy",
+      "slug": "domain-driven-design",
+      "family_id": "models-and-domain",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/domain-driven-design.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Put the domain model at the center of the app and let controllers and views stay thin around it.",
+      "best_for": [
+        "greenfield architecture",
+        "rich business domains",
+        "moving logic out of controllers"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:concerns-for-organization",
+        "fizzy:state-modeling-with-records",
+        "fizzy:callbacks-done-right"
+      ]
+    },
+    "fizzy:event-sourcing-and-activity": {
+      "title": "Event Sourcing and Activity Tracking",
+      "source": "fizzy",
+      "slug": "event-sourcing-and-activity",
+      "family_id": "jobs-events-and-integrations",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/event-sourcing-and-activity.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "A single event model for feeds, notifications, webhooks, and audit-style activity.",
+      "best_for": [
+        "activity feeds",
+        "webhooks",
+        "notifications",
+        "audit trails"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:background-jobs-and-integrations",
+        "fizzy:advanced-rails-patterns"
+      ]
+    },
+    "fizzy:form-components": {
+      "title": "Professional Form Components in Rails",
+      "source": "fizzy",
+      "slug": "form-components",
+      "family_id": "views-css-and-forms",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/form-components.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Consistent, accessible form components built with CSS custom properties and Stimulus behaviors.",
+      "best_for": [
+        "design systems",
+        "form-heavy Rails apps",
+        "progressive enhancement"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:modern-css-architecture",
+        "campfire:view-layer-and-css"
+      ]
+    },
+    "fizzy:hybrid-resource-controllers": {
+      "title": "Hybrid Resource Controllers",
+      "source": "fizzy",
+      "slug": "hybrid-resource-controllers",
+      "family_id": "controllers-and-routes",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/hybrid-resource-controllers.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Serve HTML, Turbo Stream, and JSON from the same resource controller without fragmenting the domain.",
+      "best_for": [
+        "Turbo plus JSON",
+        "HTML-first APIs",
+        "shared resource workflows"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:restful-resource-design",
+        "fizzy:turbo-patterns"
+      ]
+    },
+    "fizzy:modern-css-architecture": {
+      "title": "Modern CSS Architecture Without a Build Step",
+      "source": "fizzy",
+      "slug": "modern-css-architecture",
+      "family_id": "views-css-and-forms",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/modern-css-architecture.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Layered custom CSS architecture for Rails without Tailwind, Sass, or a CSS build step.",
+      "best_for": [
+        "Propshaft and importmap apps",
+        "custom CSS systems",
+        "build-step avoidance"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:view-layer-and-css",
+        "fizzy:form-components"
+      ]
+    },
+    "fizzy:multi-tenant-authentication": {
+      "title": "Multi-Tenant Authentication and Authorization",
+      "source": "fizzy",
+      "slug": "multi-tenant-authentication",
+      "family_id": "auth-and-tenancy",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/multi-tenant-authentication.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Identity, membership, tenant resolution, and layered authorization for multi-tenant Rails apps.",
+      "best_for": [
+        "account memberships",
+        "tenant switching",
+        "B2B SaaS authorization"
+      ],
+      "conflicts_with": [
+        "campfire:single-account-bootstrap"
+      ],
+      "complements": [
+        "fizzy:authentication-spec",
+        "fizzy:platform-aware-rails"
+      ]
+    },
+    "fizzy:platform-aware-rails": {
+      "title": "Platform-Aware Rails",
+      "source": "fizzy",
+      "slug": "platform-aware-rails",
+      "family_id": "portability-and-platform",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/platform-aware-rails.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Treat request metadata, timezone, and client platform as first-class Rails inputs.",
+      "best_for": [
+        "mobile or bridge clients",
+        "timezone-sensitive UX",
+        "platform-specific feature flags"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:multi-tenant-authentication",
+        "fizzy:account-data-transfer"
+      ]
+    },
+    "fizzy:restful-resource-design": {
+      "title": "RESTful Resource Design",
+      "source": "fizzy",
+      "slug": "restful-resource-design",
+      "family_id": "controllers-and-routes",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/restful-resource-design.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "CRUD-oriented resource design that keeps controllers small by modeling endpoints as nouns.",
+      "best_for": [
+        "controller discipline",
+        "route design",
+        "HTML-first Rails apps"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:hybrid-resource-controllers",
+        "campfire:resourceful-controller-design"
+      ]
+    },
+    "fizzy:state-modeling-with-records": {
+      "title": "State Modeling with Records",
+      "source": "fizzy",
+      "slug": "state-modeling-with-records",
+      "family_id": "models-and-domain",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/state-modeling-with-records.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Model optional or significant state with associated records when booleans stop carrying enough meaning.",
+      "best_for": [
+        "stateful workflows",
+        "optional capabilities",
+        "audit-friendly modeling"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:domain-driven-design",
+        "fizzy:delegated-types-pattern"
+      ]
+    },
+    "fizzy:testing-philosophy": {
+      "title": "Testing Philosophy",
+      "source": "fizzy",
+      "slug": "testing-philosophy",
+      "family_id": "testing",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/testing-philosophy.md",
+      "kind": "portable_plus_notes",
+      "import_modes": [
+        "docs_only",
+        "guided_patch"
+      ],
+      "summary": "Integration-heavy Rails testing with selective smaller tests for dense domain logic.",
+      "best_for": [
+        "Minitest and RSpec teams alike",
+        "real-stack confidence",
+        "pragmatic system testing"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:testing-philosophy"
+      ]
+    },
+    "fizzy:turbo-patterns": {
+      "title": "Turbo and Hotwire Patterns",
+      "source": "fizzy",
+      "slug": "turbo-patterns",
+      "family_id": "realtime-and-collaboration",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/turbo-patterns.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Reusable Turbo patterns for real-time Rails UIs, multi-session updates, and light abstraction.",
+      "best_for": [
+        "Turbo streams",
+        "live UI updates",
+        "HTML-first realtime"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:hybrid-resource-controllers",
+        "campfire:realtime-with-hotwire-and-action-cable"
+      ]
+    },
+    "fizzy:user-profiles-and-avatars": {
+      "title": "User Profiles and Avatars",
+      "source": "fizzy",
+      "slug": "user-profiles-and-avatars",
+      "family_id": "content-storage-and-profiles",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/user-profiles-and-avatars.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Profiles, avatars, preferences, theming, and user-boundary decisions around personal data.",
+      "best_for": [
+        "profile pages",
+        "avatar handling",
+        "user preferences"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "fizzy:active-storage-authorization",
+        "fizzy:form-components"
+      ]
+    },
+    "fizzy:view-layer-philosophy": {
+      "title": "View Layer Philosophy",
+      "source": "fizzy",
+      "slug": "view-layer-philosophy",
+      "family_id": "views-css-and-forms",
+      "doc_path": "references/bundled-docs/fizzy-best-practices/best-practices/view-layer-philosophy.md",
+      "kind": "portable_reference",
+      "import_modes": [
+        "docs_only",
+        "starter_scaffold",
+        "guided_patch"
+      ],
+      "summary": "Partials and helpers as the default Rails view abstraction, with presenter objects as the rare exception.",
+      "best_for": [
+        "server-rendered views",
+        "helper discipline",
+        "ERB composition"
+      ],
+      "conflicts_with": [],
+      "complements": [
+        "campfire:view-layer-and-css",
+        "fizzy:modern-css-architecture"
+      ]
+    }
+  }
+}

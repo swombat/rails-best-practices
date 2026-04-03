@@ -1,0 +1,20 @@
+{
+  "name": "rails-best-practices-local",
+  "interface": {
+    "displayName": "Rails Best Practices"
+  },
+  "plugins": [
+    {
+      "name": "rails-best-practices",
+      "source": {
+        "source": "local",
+        "path": "./plugins/rails-best-practices"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

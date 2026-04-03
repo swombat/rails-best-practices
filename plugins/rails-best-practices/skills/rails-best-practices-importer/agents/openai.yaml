@@ -1,0 +1,7 @@
+interface:
+  display_name: "Rails Best Practices Importer"
+  short_description: "Import selected Campfire and Fizzy Rails patterns."
+  brand_color: "#B45309"
+  default_prompt: "Use $rails-best-practices-importer to add selected Campfire and Fizzy best practices to this Rails app."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,34 @@
+{
+  "name": "rails-best-practices",
+  "version": "0.1.0",
+  "description": "Import selected Campfire and Fizzy Rails best practices into a target Rails application.",
+  "author": {
+    "name": "Daniel Tenner"
+  },
+  "license": "MIT",
+  "keywords": [
+    "rails",
+    "best-practices",
+    "campfire",
+    "fizzy",
+    "architecture"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Rails Best Practices",
+    "shortDescription": "Choose and import Campfire and Fizzy Rails patterns.",
+    "longDescription": "A Codex plugin for selecting overlapping or source-specific Rails best practices from Campfire and Fizzy, then importing the chosen patterns into a new or existing Rails application.",
+    "developerName": "Daniel Tenner",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Use $rails-best-practices-importer to set up a new multi-tenant Rails app from the Fizzy playbook.",
+      "Use $rails-best-practices-importer to add a Campfire-style collaboration stack to this Rails app.",
+      "Use $rails-best-practices-importer to show the combined Campfire and Fizzy best-practices menu."
+    ],
+    "brandColor": "#B45309"
+  }
+}
