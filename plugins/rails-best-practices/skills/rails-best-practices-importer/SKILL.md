@@ -31,7 +31,10 @@ ruby scripts/build_catalog.rb
 5. Load only the selected source docs.
    - Do not load the entire Campfire or Fizzy corpus into context.
    - Use the `doc_path` values in `references/practice-catalog.json` to open the exact docs needed.
-6. If local source repos exist at `~/dev/once-campfire` or `~/dev/fizzy`, use them only for targeted implementation examples after the user has selected the practice.
+6. If deeper implementation reference is needed after the user selects a practice, use the source repos in this order:
+   - bundled docs inside `references/bundled-docs/`
+   - local checkouts at `~/dev/once-campfire` and `~/dev/fizzy` if present
+   - official GitHub repos at `https://github.com/basecamp/once-campfire` and `https://github.com/basecamp/fizzy`
 7. Apply the selected practices in the right mode.
    - `docs_only`: add or adapt docs and architectural notes inside the target repo.
    - `starter_scaffold`: shape a new or mostly-empty Rails app around the selected practices.

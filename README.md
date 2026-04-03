@@ -21,6 +21,14 @@ The goal is simple: let Codex inspect a target Rails codebase, help you choose t
 
 The plugin is self-contained. The source docs are bundled inside the skill, so you do not need separate Campfire or Fizzy checkouts for normal use.
 
+If the skill needs deeper implementation examples, it should consult source material in this order:
+
+1. Bundled docs inside the plugin
+2. Local checkouts at `~/dev/once-campfire` and `~/dev/fizzy`, if present
+3. Official GitHub repos:
+   - `https://github.com/basecamp/once-campfire`
+   - `https://github.com/basecamp/fizzy`
+
 ## Install Into A Specific Rails Repo
 
 Use this option when you want the plugin available only inside one target Rails app.
@@ -85,6 +93,12 @@ That tells Codex to:
 - inspect the target Rails app
 - resolve overlapping practices
 - recommend a compatible import plan
+
+If you want to make the fallback behavior explicit, use:
+
+```text
+Use $rails-best-practices-importer to inspect this Rails app, and if you need deeper implementation examples, consult the official Basecamp once-campfire and fizzy repos selectively.
+```
 
 ## Best Use On A New Rails Codebase
 
@@ -206,6 +220,14 @@ If you want to inspect or extend the plugin itself, the main files are:
 - `plugins/rails-best-practices/skills/rails-best-practices-importer/references/practice-catalog.json`
 - `plugins/rails-best-practices/skills/rails-best-practices-importer/references/combined-menu.md`
 - `plugins/rails-best-practices/skills/rails-best-practices-importer/references/import-workflow.md`
+
+## License
+
+This repository now uses the O'Saasy license text from the official Fizzy repository:
+
+- `https://github.com/basecamp/fizzy/blob/main/LICENSE.md`
+
+The local license file is `LICENSE`.
 
 ## Suggested Starting Prompt
 

@@ -3,26 +3,35 @@
   "title": "Rails Best Practices Catalog",
   "source_lookup": {
     "docs_root_note": "All doc_path values are relative to the skill directory that contains this catalog.",
+    "reference_resolution_order": [
+      "bundled_docs",
+      "preferred_local_checkout",
+      "official_github_repo"
+    ],
     "optional_source_repos": {
       "campfire": {
         "preferred_local_path": "~/dev/once-campfire",
+        "official_repository_url": "https://github.com/basecamp/once-campfire",
+        "default_branch": "main",
         "search_paths": [
           "app",
           "config",
           "db",
           "test"
         ],
-        "notes": "Use only for targeted implementation examples after the user selects a practice."
+        "notes": "Use bundled docs first, then a local checkout if present, then the official GitHub repository for targeted implementation examples."
       },
       "fizzy": {
         "preferred_local_path": "~/dev/fizzy",
+        "official_repository_url": "https://github.com/basecamp/fizzy",
+        "default_branch": "main",
         "search_paths": [
           "app",
           "config",
           "db",
           "test"
         ],
-        "notes": "Use only for targeted implementation examples after the user selects a practice."
+        "notes": "Use bundled docs first, then a local checkout if present, then the official GitHub repository for targeted implementation examples."
       }
     }
   },

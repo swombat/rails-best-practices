@@ -69,10 +69,21 @@ If the target app already standardized on another framework or library, preserve
 
 ## Using Source Repos
 
-The catalog is bundled with doc paths. If local source checkouts also exist, use them only for targeted examples after the user picks a practice:
+The catalog is bundled with doc paths. If you need deeper implementation reference after the user picks a practice, use this order:
+
+1. Bundled docs inside the skill.
+2. Local source checkouts if they exist.
+3. Official GitHub source repositories.
+
+Local checkouts:
 
 - `~/dev/once-campfire`
 - `~/dev/fizzy`
+
+Official GitHub source repositories:
+
+- `https://github.com/basecamp/once-campfire`
+- `https://github.com/basecamp/fizzy`
 
 Search narrowly. Do not read those codebases wholesale unless the task truly requires it.
 
